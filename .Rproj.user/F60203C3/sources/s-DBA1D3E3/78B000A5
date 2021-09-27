@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1632778371371.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "78B000A5",
+    "lastKnownWriteTime" : 1632779086,
+    "last_content_update" : 1632779086489,
+    "path" : "F:/UEM/EAD - 2021/segundo_semestre/laboratório/lab-trabalho2/00manipulando_dados.R",
+    "project_path" : "00manipulando_dados.R",
+    "properties" : {
+        "cursorPosition" : "20,0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
