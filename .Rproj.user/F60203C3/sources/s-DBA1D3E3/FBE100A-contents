@@ -1,8 +1,0 @@
-library(ggplot2)
-library(gridExtra)
-library(dplyr)
-library(leaflet)
-library(corrplot)
-library(leaflet)
-library(readxl)
-source('./00manipulando_dados.R')

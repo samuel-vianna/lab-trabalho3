@@ -1,1 +1,40 @@
-alguma coisa legal
+```{r}
+data %>% ggplot(aes(x=colonias, y=n_potes_mel)) + geom_bar(stat='identity') +
+  coord_flip() +
+  theme_minimal() +
+   geom_text(
+    aes(label = stat(y)), 
+    stat = 'summary', fun = sum, hjust = -0.5
+  )
+```
+
+```{r}
+selectInput('time_plot', 'Selecione uma variável', 
+            choices = c(names(data)[2:5]))
+
+plotOutput('teste')
+
+plotlyOutput('time_plot')
+```
+
+
+```{r, context='server', echo=T}
+data <- as.data.frame(data)
+
+output$time_plot <- renderPlotly({
+a <- data %>% ggplot(aes(x=meses, y=data[,input$time_plot], col=colonias, group=colonias)) + 
+  geom_line() + theme(legend.position = 'bottom')
+
+ggplotly(a)  
+})
+
+
+output$teste <- renderPlot({
+  print(input$time_plot)
+data %>% ggplot(aes(x=meses, y=data[,input$time_plot], col=colonias, group=colonias)) + 
+  geom_line() + theme(legend.position = 'bottom')
+ 
+})
+
+```
+

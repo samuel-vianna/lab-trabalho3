@@ -1,0 +1,56 @@
+---
+title: Laboratório de Estatística Aplicada 
+author: UEM - 2021
+output:
+  output: rmdformats::readthedown
+runtime: shiny_prerendered
+---
+
+```{r, message=F, warning=F, echo=F}
+knitr::opts_chunk$set(message = F, warning = F, echo=F)
+library(shiny)
+library(knitr)
+library(tidyverse)
+library(corrplot)
+library(plotly)
+library(leaflet)
+source('./00manipulando_dados.R')
+# source("../01analise_functions.R")
+```
+
+# Introdução
+
+```{r, results='asis'}
+child_intro <- knitr::knit_child('./relatorio/00intro.Rmd', quiet = TRUE)
+cat(child_intro, sep = '\n')  
+```
+
+# Objetivos
+
+```{r, results='asis'}
+child_objetivos <- knitr::knit_child('./relatorio/01objetivos.Rmd', quiet = TRUE)
+cat(child_objetivos, sep = '\n')  
+```
+
+# Análise descritiva
+
+```{r, results='asis'}
+child_descritiva <- knitr::knit_child('./relatorio/02descritiva.Rmd', quiet = TRUE)
+cat(child_descritiva, sep = '\n')  
+```
+
+# Testes
+
+```{r, results='asis'}
+child_testes <- knitr::knit_child('./relatorio/03testes.Rmd', quiet = TRUE)
+cat(child_testes, sep = '\n')  
+```
+
+# Conclusão
+
+```{r, results='asis'}
+child_conclusao <- knitr::knit_child('./relatorio/04conclusao.Rmd', quiet = TRUE)
+cat(child_conclusao, sep = '\n')  
+```
+
+

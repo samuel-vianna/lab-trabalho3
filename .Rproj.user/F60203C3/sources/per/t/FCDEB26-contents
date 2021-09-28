@@ -1,0 +1,17 @@
+```{r}
+data %>% ggplot(aes(x=colonias, y=n_potes_mel)) + geom_bar(stat='identity') +
+  coord_flip() +
+  theme_minimal() +
+   geom_text(
+    aes(label = stat(y)), 
+    stat = 'summary', fun = sum, hjust = -0.5
+  )
+```
+```{r}
+a <- data %>% ggplot(aes(x=meses, y=n_potes_mel, col=colonias, group=colonias)) + 
+  geom_line() + theme(legend.position = 'bottom')
+
+
+ggplotly(a)
+```
+
