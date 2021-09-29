@@ -1,1 +1,52 @@
-alguma coisa legal
+```{r}
+selectInput('in_col', 'Selecione uma variável', 
+            choices = c("Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos"))
+
+
+plotOutput('col')
+```
+
+```{r, context='server', echo=T}
+
+data <- as.data.frame(data)
+
+output$col <- renderPlot({
+  col(data[,input$in_col])
+})
+```
+
+
+```{r}
+selectInput('in_hist_box', 'Selecione uma variável', 
+            choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop"))
+
+plotOutput('hist_box')
+```
+
+```{r, context='server', echo=T}
+
+data <- as.data.frame(data)
+
+output$hist_box <- renderPlot({
+  hist_boxplot(data[,input$in_hist_box])
+})
+```
+
+```{r}
+selectInput('in_time_plot', 'Selecione uma variável', 
+            choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo", "Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop"))
+
+
+plotlyOutput('time_plot')
+```
+
+
+
+```{r, context='server', echo=T}
+data<-as.data.frame(data)
+
+output$time_plot <- renderPlotly({
+  graf_linha(data[,input$in_time_plot])
+})
+```
+
