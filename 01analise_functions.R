@@ -12,7 +12,7 @@ source('./00manipulando_dados.R')
 
 ######################################################
 
-fill_color <- 'royalblue'
+fill_color <- 'gold3'
 
 ######################################################
 
@@ -123,7 +123,7 @@ ggplotly(a, tooltip = c("x","y","group"))
 
 
 col<-function(var){
-  data %>% ggplot(aes(x=colonias, y=var)) + geom_bar(stat='identity') +
+  data %>% ggplot(aes(x=colonias, y=var)) + geom_bar(stat='identity', fill=fill_color) +
     coord_flip() +
     theme_minimal() +
     geom_text(
