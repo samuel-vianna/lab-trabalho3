@@ -31,70 +31,11 @@ hist_boxplot <- function(var) {
 }
 
 
-# grï¿½fico de boxplot de acordo com o mï¿½dico
-boxplot_medico <- function(var) {
-  ggplot(pacientes, aes(x=Medico, y=var)) + geom_boxplot(fill= fill_color) +
-    theme_minimal() 
-}
-
-
-
 # funï¿½ï¿½o para fazer tabelas
 make_table <- function(table, align='c', booktabs=T){
   kable(table, align = align, booktabs=booktabs)
 }
 
-# funï¿½ao mapa medico
-mapa_geral<-function(radius, blur){
-  leaflet(pacientes)  %>% 
-    addProviderTiles("Esri") %>% 
-    setView(-51.931180, -23.415453, zoom = 12) %>% 
-    addHeatmap(lng=~Longitude,lat=~Latitude,max=100,radius=radius,blur=blur)
-}
-
-# funï¿½ao mapa medico
-mapa_medico<-function(){
-  cof <- colorFactor(c("red", "blue", "orange",'black',"green","pink","purple"), domain=c("A", "B", "C","D","E","F","G"))
-  medicos$Local <- factor(medicos$Local)
-  new <- c("red3","blue","orange","black","green","pink","purple")[medicos$Local]
-  
-  icons <- awesomeIcons(
-    icon = 'ios-close',
-    iconColor = 'white',
-    library = 'ion',
-    markerColor = new
-  )
-  leaflet(pacientes)  %>% 
-    addProviderTiles("Esri") %>% 
-    setView(-51.931180, -23.415453, zoom = 12) %>% 
-    addCircleMarkers(~Longitude, ~Latitude, weight = 3, radius=4, 
-                     color=~cof(Medico), stroke = F, fillOpacity = 0.9)  %>%
-    addLegend("bottomright", colors= c("red", "blue", "orange","black","green","pink","purple"), labels=c("A'", "B", "C","D","E","F","G"), title="Medico")%>%
-    addAwesomeMarkers(lng = ~medicos$Longitude, lat=~medicos$Latitude, icon=icons,
-                      popup = ~medicos$Local)
-}
-
-# funï¿½ao mapa medico
-mapa_idade<-function(){
-  cof <- colorFactor(c("red", "blue", "orange","black"), domain=c("20 a 40","40 a 60","acima de 60","menor que 20"))
-  leaflet(pacientes)  %>% 
-    addProviderTiles("Esri") %>% 
-    setView(-51.931180, -23.415453, zoom = 12) %>% 
-    addCircleMarkers(~Longitude, ~Latitude, weight = 3, radius=4, 
-                     color=~cof(pacientes$categoria), stroke = F, fillOpacity = 0.9)  %>%
-    addLegend("bottomright", colors= c("red", "blue", "orange"), labels=c("Menor que 40 anos","Entre 40 anos e 60 anos","Maior que 40 anos"), title="Idade")
-}
-
-# Funï¿½ï¿½o grafico idade pelo medico
-idade_medico<-function(medico){
-  dados<-filter(pacientes, Medico == medico)
-  ggplot(dados,aes(x=categoria))+
-    geom_bar(fill="royalblue")+
-    geom_text(aes(y=..count.., label=..count..), vjust=1.5, stat = 'count') + 
-    labs(x="Categoria",y="Frequencia") +
-    theme_minimal()
-  
-}
 
 # fun??o para testar normalidade
 
@@ -117,10 +58,17 @@ idade_medico<-function(medico){
 #grafico ggplotly#####
 graf_linha<-function(variavel){
 a <-ggplot(data,aes(x=meses, y=variavel,col=colonias, group=colonias)) + 
-  geom_line() + theme(legend.position = 'bottom')
-ggplotly(a, tooltip = c("x","y","group"))  
+  geom_line() + theme(legend.position = 'bottom') + theme_minimal() + 
+  geom_vline(xintercept = which(levels(data$meses) %in% c('Mar', 'Jun','Sep', 'Dec')),
+             size=1, col='gray', alpha=0.5 ) +
+  geom_text(aes(x=3-0.5, y=max(variavel), label='Outono'), angle=90, hjust=1.5,colour='black') + 
+  geom_text(aes(x=6-0.5, y=max(variavel), label='Inverno'), angle=90, hjust=1.5, colour='black') + 
+  geom_text(aes(x=9-0.5, y=max(variavel), label='Primavera'), angle=90, hjust=1.5, colour='black') + 
+  geom_text(aes(x=12-0.5, y=max(variavel), label='Verão'), angle=90, hjust=1.5, colour='black') 
+ ggplotly(a, tooltip = c("x","y","group"))  
 }
 
+graf_linha(data$n_potes_mel)
 
 col<-function(var){
   data %>% ggplot(aes(x=colonias, y=var)) + geom_bar(stat='identity', fill=fill_color) +
