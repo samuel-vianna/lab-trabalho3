@@ -18,7 +18,8 @@ output$col <- renderPlot({
 
 ```{r}
 selectInput('in_hist_box', 'Selecione uma variável', 
-            choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop"))
+            choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop",
+                        'Peso a cada 100 abelhas' = 'peso_100_abelhas'))
 
 plotOutput('hist_box')
 ```
@@ -34,12 +35,11 @@ output$hist_box <- renderPlot({
 
 ```{r}
 selectInput('in_time_plot', 'Selecione uma variável', 
-            choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo", "Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop"))
+            choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo", "Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop", 'Peso a cada 100 abelhas' = 'peso_100_abelhas'))
 
 
 plotlyOutput('time_plot')
 ```
-
 
 
 ```{r, context='server', echo=T}
@@ -49,4 +49,64 @@ output$time_plot <- renderPlotly({
   graf_linha(data[,input$in_time_plot])
 })
 ```
+
+## Dados de acordo com a colônia e estação
+
+```{r}
+fluidRow(
+  column(6,
+         selectInput('input_disp_x', 'Selecione o grupo', 
+                     choices = c('estacao', 'colonias'))),
+  column(6,
+         selectInput('input_disp_y', 'Selecione o grupo', 
+                     choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo", "Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop", 'Peso a cada 100 abelhas' = 'peso_100_abelhas')))
+)
+
+DT::dataTableOutput('output_table_disp')
+
+plotOutput('output_grafico_disp')
+```
+
+
+```{r, context='server', echo=T}
+
+output$output_table_disp <- DT::renderDataTable({
+  data %>%
+    rename(grupo = input$input_disp_x) %>%
+    rename(resp = input$input_disp_y) %>%
+  group_by(grupo) %>%
+  summarise(min = min(resp),
+            max = max(resp),
+            media = round(mean(resp), 3),
+            median = round(median(resp), 3),
+            var = round(var(resp), 3),
+            ) %>% as.data.frame()  
+})
+
+output$output_grafico_disp <- renderPlot({
+  grafico_disp(data, x=input$input_disp_x, y=input$input_disp_y)
+})
+```
+
+## Correlação dos dados
+
+```{r}
+ind_var <- sapply(data, is.numeric)
+
+data[ind_var] %>%
+  cor() %>% corrplot(method='color', type='lower',
+                     addCoef.col = 'black', addgrid.col = 'black',
+                     diag=F, tl.col = 'black')
+```
+
+
+
+Pode-se notar uma forte correlação linear positiva entre o número de discos e a estimativa da população, além de correlações lineares positivas moderadas entre os seguintes pares de variáveis:
+
+- diâmetro do canudo x comprimento do canudo
+- número de discos x número de potes de mel
+- peso x número de potes de mel
+- estimativa da população x número de potes de mel
+- estimativa da população x tamanho dos discos
+- estimativa da população x peso
 

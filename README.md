@@ -4,7 +4,8 @@
 - [ ] Análise Descritiva
 - [ ] Testes
 - [ ] Relatório
-  - [ ] Introdução
-  - [ ] Objetivos
-  - [ ] Análises e testes
+  - [ ] Introdução (Samuel)
+  - [ ] Objetivos 
+  - [ ] Análise descritiva (Vitão)
+  - [ ] Testes
   - [ ] Conclusão
