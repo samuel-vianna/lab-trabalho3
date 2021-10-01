@@ -11,6 +11,7 @@ source('./00manipulando_dados.R')
 ##### verificando presença de NA #####
 vis_dat(data)
 
+fill_color <- 'gold3'
 
 # grafico de histograma com boxplot
 hist_boxplot <- function(var) {
@@ -61,4 +62,18 @@ col<-function(var){
       aes(label = stat(y)), 
       stat = 'summary', fun = sum, hjust = -0.5
     )
+}
+## tabela mediadas
+
+medidas<-function(x,y){
+  data %>%
+    rename(grupo = x) %>%
+    rename(resp = y) %>%
+    group_by(grupo) %>%
+    summarise(min = min(resp),
+              max = max(resp),
+              media = round(mean(resp), 3),
+              median = round(median(resp), 3),
+              var = round(var(resp), 3),
+    ) %>% as.data.frame()  
 }
