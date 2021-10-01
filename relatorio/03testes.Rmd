@@ -32,26 +32,56 @@ library(multcompView)
 
 ```
 
-
 ```{r}
-emocao=rep(c('medo','felicidade','depressão','calma'),8)
-paciente=rep(c(1:8),each=4)
-resposta=c(23.1,22.7,22.5,22.6,57.6,53.2,53.7,53.1,10.5,9.7,10.8,8.3,23.6
-,19.6,21.1,21.6,11.9,13.8,13.7,13.3,54.6,47.1,39.2,37.0,21.0,13.6,13.7,14.8,20.3,23.6,16.3,14.8)
+teste <- kruskal.test(data$n_potes_mel ~ data$colonias)
 
-cbind(emocao, paciente, resposta)
 
-friedman.test(resposta, groups=emocao, blocks=paciente)
-
-pTable  = posthoc.friedman.nemenyi.test(n_potes_mel ~ colonias | meses, data=data)
+pTable  = posthoc.kruskal.nemenyi.test(n_potes_mel ~ as.factor(estacao), data=data)
 
 pTableComplete = fullPTable(pTable$p.value)
 r <- multcompLetters(pTableComplete)
 
 data %>%
-  group_by(colonias) %>%
+  group_by(estacao) %>%
   summarise(media=mean(n_potes_mel)) %>%
-    bind_cols(r$Letters)
+    mutate(grupos = r$Letters) %>% 
+  arrange(desc(media))
+```
+
+
+```{r}
+pTable  = posthoc.kruskal.nemenyi.test(n_potes_mel ~ as.factor(meses), data=data)
+
+pTableComplete = fullPTable(pTable$p.value)
+r <- multcompLetters(pTableComplete)
+
+data %>%
+  group_by(meses) %>%
+  summarise(media=mean(n_potes_mel)) %>%
+    mutate(grupos = r$Letters) %>% 
+  arrange(desc(media))
+```
+
+
+```{r}
+# emocao=rep(c('medo','felicidade','depressão','calma'),8)
+# paciente=rep(c(1:8),each=4)
+# resposta=c(23.1,22.7,22.5,22.6,57.6,53.2,53.7,53.1,10.5,9.7,10.8,8.3,23.6
+# ,19.6,21.1,21.6,11.9,13.8,13.7,13.3,54.6,47.1,39.2,37.0,21.0,13.6,13.7,14.8,20.3,23.6,16.3,14.8)
+# 
+# cbind(emocao, paciente, resposta)
+# 
+# friedman.test(resposta, groups=emocao, blocks=paciente)
+# 
+# pTable  = posthoc.friedman.nemenyi.test(n_potes_mel ~ colonias | meses, data=data)
+# 
+# pTableComplete = fullPTable(pTable$p.value)
+# r <- multcompLetters(pTableComplete)
+# 
+# data %>%
+#   group_by(colonias) %>%
+#   summarise(media=mean(n_potes_mel)) %>%
+#     bind_cols(r$Letters)
 
 ```
 

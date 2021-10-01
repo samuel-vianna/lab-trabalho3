@@ -1,1 +1,28 @@
-alguma coisa legal
+```{r}
+fluidRow(
+  column(6,
+         selectInput('input_radar_var1', 'Selecione 1 colônia', 
+            choices = unique(data$colonias))),
+  column(6,
+         selectInput('input_radar_var2', 'Selecione 1 colônia', 
+            choices = unique(data$colonias)))
+)
+```
+
+```{r}
+fluidRow(
+  column(6, plotOutput('output_radar_1')),
+  column(6, plotOutput('output_radar_2'))
+)
+```
+
+```{r, context='server', echo=T}
+output$output_radar_1 <- renderPlot({
+  radar_plot(input$input_radar_var1)
+})
+
+output$output_radar_2 <- renderPlot({
+  radar_plot(input$input_radar_var2)
+})
+```
+

@@ -62,3 +62,45 @@ col<-function(var){
       stat = 'summary', fun = sum, hjust = -0.5
     )
 }
+
+
+################ radar plot
+
+# Set graphic colors
+colors_border=c( rgb(0.2,0.5,0.5,0.9),  rgb(0.7,0.5,0.1,0.9) )
+colors_in=c( rgb(0.2,0.5,0.5,0.4),  rgb(0.7,0.5,0.1,0.4) )
+
+normalizar <- function(val, min, max) (val - min) / (max - min)
+
+normalizar_medias <- sapply(data[,3:9], range) %>%
+  rbind(sapply(data[,3:9], function(x) ifelse(sd(x)/mean(x) < 1, mean(x), median(x)))) %>%
+  as.data.frame()
+
+media_geral <- sapply(normalizar_medias, function(x) normalizar(x[3], x[1], x[2]))
+
+radar_plot <- function(colonia){
+  
+  media_colonia <- data %>%
+    filter(colonias == colonia) %>%
+    select(3:9) %>%
+    sapply(., function(x) {
+      normalizar(ifelse(sd(x)/mean(x) < 1, mean(x), median(x)),
+                 min(x), max(x))
+    })
+  
+  radar_plot <- data.frame(min=0, max=1, media_geral, media_colonia) %>% t() %>% as.data.frame()
+  
+  # plot with default options:
+  radarchart( radar_plot  , axistype=1 , 
+              #custom polygon
+              pcol=colors_border , pfcol=colors_in , plwd=4 , plty=1,
+              #custom the grid
+              cglcol="grey", cglty=1, axislabcol="grey", caxislabels=seq(0,1,5), cglwd=0.8,
+              #custom labels
+              vlcex=0.8 
+  )
+  
+  legend(x=0.7, y=1.3, legend = c('geral', str_to_title(colonia)), bty = "n",
+         pch=15 , col=colors_in , text.col = "grey", cex=1.2, pt.cex=3)
+   
+}
