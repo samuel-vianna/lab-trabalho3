@@ -1,9 +1,10 @@
 ```{r}
-selectInput('in_col', 'Selecione uma variável', 
-            choices = c("Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos"))
+selectInput('in_col','Selecione uma variável', choices = c("Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos"))
 
 
 plotOutput('col')
+
+textOutput('output_analise_1')
 ```
 
 ```{r, context='server', echo=T}
@@ -13,8 +14,17 @@ data <- as.data.frame(data)
 output$col <- renderPlot({
   col(data[,input$in_col])
 })
-```
 
+output$output_analise_1 <- renderText({
+  r <- ''
+  if(input$in_col == "n_potes_mel"){
+    r <- 'Existe uma grande varianção de numero de potes de mel com a colonia 7 com 20 potes de mel e colonia 9 com 627 colonia '
+  } else{
+    r <- 'Não existe uma grande variabilidade do número de discos entre as colonias'
+  }
+  return(r)
+})
+```
 
 ```{r}
 selectInput('in_hist_box', 'Selecione uma variável', 
@@ -22,6 +32,9 @@ selectInput('in_hist_box', 'Selecione uma variável',
                         'Peso a cada 100 abelhas' = 'peso_100_abelhas'))
 
 plotOutput('hist_box')
+
+textOutput('output_analise_2')
+
 ```
 
 ```{r, context='server', echo=T}
@@ -31,7 +44,59 @@ data <- as.data.frame(data)
 output$hist_box <- renderPlot({
   hist_boxplot(data[,input$in_hist_box])
 })
+
+output$output_analise_2 <- renderText({
+  r <- ''
+  if(input$in_hist_box == 'comp_canudo'){
+    r <- 'Os dados estão distribuidos de forma relativamente homogenea entre 0 e 12, e possui poucos outliers a direita '
+  }else if(input$in_hist_box == 'diam_canudo'){
+    r <- 'Existe uma grande concentração dos dados em torno de 4 e existe poucos outliers a esquerda'
+  }else if(input$in_hist_box == 'tam_discos'){
+    r <- 'Os dados estão distribuidos a direita com media em torno de 6,5 e possui poucos outliers a esquerda'
+  }else if(input$in_hist_box == 'peso'){
+    r <- 'Os dados estão distribuidos de forma homogenea entre 2 e 8'
+  }else if(input$in_hist_box == 'est_pop'){
+    r <- 'Os dados estão distribuidos com uma concentração a esquerda com media em torno de 3000, e possui outliers a direita'
+  }else{
+    r <- 'Os dados estão distribuidos com uma concentração a esquerda com media em torno de 0,2, e possui outliers a direita'
+  }
+  return(r)
+})
 ```
+
+
+## Comparação entre colônias
+
+```{r}
+fluidRow(
+  column(6,
+         selectInput('input_radar_var1', 'Selecione 1 colônia', 
+            choices = unique(data$colonias))),
+  column(6,
+         selectInput('input_radar_var2', 'Selecione 1 colônia', 
+            choices = unique(data$colonias)))
+)
+```
+
+```{r}
+fluidRow(
+  column(6, plotOutput('output_radar_1')),
+  column(6, plotOutput('output_radar_2'))
+)
+```
+
+```{r, context='server', echo=T}
+output$output_radar_1 <- renderPlot({
+  radar_plot(input$input_radar_var1)
+})
+
+output$output_radar_2 <- renderPlot({
+  radar_plot(input$input_radar_var2)
+})
+```
+
+
+## Análise por grupos
 
 ```{r}
 selectInput('in_time_plot', 'Selecione uma variável', 
@@ -49,6 +114,8 @@ output$time_plot <- renderPlotly({
   graf_linha(data[,input$in_time_plot])
 })
 ```
+
+Podemos perceber que na maioria das variaveis existe uma alteração com o passar dos meses no mesmo momento, com diferença da força das variação com diferentes colonias
 
 ## Dados de acordo com a colônia e estação
 
@@ -71,22 +138,15 @@ plotOutput('output_grafico_disp')
 ```{r, context='server', echo=T}
 
 output$output_table_disp <- DT::renderDataTable({
-  data %>%
-    rename(grupo = input$input_disp_x) %>%
-    rename(resp = input$input_disp_y) %>%
-  group_by(grupo) %>%
-  summarise(min = min(resp),
-            max = max(resp),
-            media = round(mean(resp), 3),
-            median = round(median(resp), 3),
-            var = round(var(resp), 3),
-            ) %>% as.data.frame()  
+  medidas(x=input$input_disp_x, y=input$input_disp_y)
 })
 
 output$output_grafico_disp <- renderPlot({
   grafico_disp(data, x=input$input_disp_x, y=input$input_disp_y)
 })
 ```
+
+Podemos perceber que existe uma alteração de aumento e diminuição com o passar das estações e isto tambem acontece quando modificamos a variavel do x entre as colonias.
 
 ## Correlação dos dados
 

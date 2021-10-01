@@ -11,6 +11,7 @@ source('./00manipulando_dados.R')
 ##### verificando presenÃ§a de NA #####
 vis_dat(data)
 
+fill_color <- 'gold3'
 
 # grafico de histograma com boxplot
 hist_boxplot <- function(var) {
@@ -30,7 +31,7 @@ grafico_disp <- function(data, x, y){
   y_var <- unlist(data[,y])
   
   data %>% ggplot(aes(x=x_var, y = y_var)) + geom_jitter(width = 0.1) +
-    ggtitle('Gráfico de dispersão') +
+    ggtitle('Grï¿½fico de dispersï¿½o') +
     stat_summary(fun=mean, geom='line', aes(y= y_var, group=1), col='red', lwd=0.8) +
     stat_summary(fun=mean, geom='point', col='blue', size=2) +
     stat_summary(fun=median, geom='line', aes(y= y_var, group=1), col='gold3', lwd=0.8) +
@@ -48,7 +49,7 @@ graf_linha<-function(variavel){
     geom_text(aes(x=3-0.5, y=max(variavel), label='Outono'), angle=90, hjust=1.5,colour='black') + 
     geom_text(aes(x=6-0.5, y=max(variavel), label='Inverno'), angle=90, hjust=1.5, colour='black') + 
     geom_text(aes(x=9-0.5, y=max(variavel), label='Primavera'), angle=90, hjust=1.5, colour='black') + 
-    geom_text(aes(x=12-0.5, y=max(variavel), label='Verão'), angle=90, hjust=1.5, colour='black') 
+    geom_text(aes(x=12-0.5, y=max(variavel), label='Verï¿½o'), angle=90, hjust=1.5, colour='black') 
   ggplotly(a, tooltip = c("x","y","group"))  
 }
 
@@ -62,7 +63,6 @@ col<-function(var){
       stat = 'summary', fun = sum, hjust = -0.5
     )
 }
-
 
 ################ radar plot
 
@@ -103,4 +103,18 @@ radar_plot <- function(colonia){
   legend(x=0.7, y=1.3, legend = c('geral', str_to_title(colonia)), bty = "n",
          pch=15 , col=colors_in , text.col = "grey", cex=1.2, pt.cex=3)
    
+}
+## tabela mediadas
+
+medidas<-function(x,y){
+  data %>%
+    rename(grupo = x) %>%
+    rename(resp = y) %>%
+    group_by(grupo) %>%
+    summarise(min = min(resp),
+              max = max(resp),
+              media = round(mean(resp), 3),
+              median = round(median(resp), 3),
+              var = round(var(resp), 3),
+    ) %>% as.data.frame()  
 }
