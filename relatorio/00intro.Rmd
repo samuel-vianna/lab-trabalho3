@@ -1,1 +1,23 @@
-alguma coisa legal
+
+A fim de fixar os conhecimentos passados em sala de aula, foi passado um banco de dados com informações sobre colonias de abelhas durante um ano. 
+
+## Variáveis
+
+O banco de dados fornecido contém as seguintes variáveis:
+
+- Meses;
+- Colonias;
+- Comprimento do canudo;
+- Diametro do canudo;
+- Número de potes de mel;
+- Número de discos;
+- Tamanho dos discos;
+- Peso;
+- Estatistica populacional
+
+Além do mais, tambem foi criado uma varivel nova estação do ano para uma possivel nova classificação.
+
+Além disso tambem, foi criado uma outra variavel(peso a cada 100 abelhas) a fim de procurar uma classificação diferente.
+
+
+

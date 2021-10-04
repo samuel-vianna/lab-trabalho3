@@ -26,7 +26,6 @@ output$output_analise_1 <- renderText({
 })
 ```
 
-
 ```{r}
 selectInput('in_hist_box', 'Selecione uma variável', 
             choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop",
@@ -66,6 +65,38 @@ output$output_analise_2 <- renderText({
 ```
 
 
+## Comparação entre colônias
+
+```{r}
+fluidRow(
+  column(6,
+         selectInput('input_radar_var1', 'Selecione 1 colônia', 
+            choices = unique(data$colonias))),
+  column(6,
+         selectInput('input_radar_var2', 'Selecione 1 colônia', 
+            choices = unique(data$colonias)))
+)
+```
+
+```{r}
+fluidRow(
+  column(6, plotOutput('output_radar_1')),
+  column(6, plotOutput('output_radar_2'))
+)
+```
+
+```{r, context='server', echo=T}
+output$output_radar_1 <- renderPlot({
+  radar_plot(input$input_radar_var1)
+})
+
+output$output_radar_2 <- renderPlot({
+  radar_plot(input$input_radar_var2)
+})
+```
+
+
+## Análise por grupos
 
 ```{r}
 selectInput('in_time_plot', 'Selecione uma variável', 
@@ -120,12 +151,7 @@ Podemos perceber que existe uma alteração de aumento e diminuição com o pass
 ## Correlação dos dados
 
 ```{r}
-ind_var <- sapply(data, is.numeric)
-
-data[ind_var] %>%
-  cor() %>% corrplot(method='color', type='lower',
-                     addCoef.col = 'black', addgrid.col = 'black',
-                     diag=F, tl.col = 'black')
+corre(data)
 ```
 
 
