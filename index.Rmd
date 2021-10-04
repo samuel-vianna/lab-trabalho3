@@ -15,8 +15,8 @@ library(corrplot)
 library(plotly)
 library(fmsb)
 library(stringr)
-source('./00manipulando_dados.R')
 source("./01analise_functions.R")
+source('./00manipulando_dados.R')
 source("./01analise_descritiva.R")
 ```
 
