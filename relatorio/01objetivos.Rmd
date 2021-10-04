@@ -1,1 +1,5 @@
-alguma coisa legal
+Com base nisso, esse trabalho possui os seguintes objetivos:
+
+- Verificar correlação entre as variveis;
+- Criar um modelo para prever a produção de potes de mel;
+- Criar uma árvore de decisão.

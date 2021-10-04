@@ -151,12 +151,7 @@ Podemos perceber que existe uma alteração de aumento e diminuição com o pass
 ## Correlação dos dados
 
 ```{r}
-ind_var <- sapply(data, is.numeric)
-
-data[ind_var] %>%
-  cor() %>% corrplot(method='color', type='lower',
-                     addCoef.col = 'black', addgrid.col = 'black',
-                     diag=F, tl.col = 'black')
+corre(data)
 ```
 
 

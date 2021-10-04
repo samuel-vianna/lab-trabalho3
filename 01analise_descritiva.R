@@ -118,3 +118,14 @@ medidas<-function(x,y){
               var = round(var(resp), 3),
     ) %>% as.data.frame()  
 }
+
+## correlação
+
+corre<-function(banco){
+  ind_var <- sapply(banco, is.numeric)
+  data[ind_var] %>%
+  cor() %>% corrplot(method='color', type='lower',
+                     addCoef.col = 'black', addgrid.col = 'black',
+                     diag=F, tl.col = 'black')
+
+}
