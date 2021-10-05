@@ -1,5 +1,6 @@
+A fim de fixar os conhecimentos passados em sala de aula, foi passado um banco de dados com informações sobre 16 colônias de abelhas durante um ano.
 
-A fim de fixar os conhecimentos passados em sala de aula, foi passado um banco de dados com informações sobre colonias de abelhas durante um ano. 
+Por se tratar de uma análise entre as colônias de um determinado apiário, os dados foram considerados como populações.
 
 ## Variáveis
 
@@ -15,9 +16,17 @@ O banco de dados fornecido contém as seguintes variáveis:
 - Peso;
 - Estatistica populacional
 
-Além do mais, tambem foi criado uma varivel nova estação do ano para uma possivel nova classificação.
+Além do mais, a fim de procurar outras perspectivas para os dados, foram adicionadas as seguintes variáveis:
 
-Além disso tambem, foi criado uma outra variavel(peso a cada 100 abelhas) a fim de procurar uma classificação diferente.
+- Estação
+- Peso a cada 100 abelhas
 
 
+# Objetivos
 
+Com base nisso, esse trabalho possui os seguintes objetivos:
+
+- Analisar o desempenho das colônias ao longo do ano;
+- Analisar a diferença ente as colônias;
+- Buscar variáveis que estejam relacionadas com a produção de mel;
+- Criar um modelo capaz de prever a quantidade de mel produzida por uma colônia.

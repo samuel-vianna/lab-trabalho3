@@ -16,8 +16,8 @@ library(plotly)
 library(fmsb)
 library(stringr)
 source('./00manipulando_dados.R')
-source("./01analise_functions.R")
 source("./01analise_descritiva.R")
+source("./01analise_functions.R")
 ```
 
 # Introdução
@@ -25,13 +25,6 @@ source("./01analise_descritiva.R")
 ```{r, results='asis'}
 child_intro <- knitr::knit_child('./relatorio/00intro.Rmd', quiet = TRUE)
 cat(child_intro, sep = '\n')  
-```
-
-# Objetivos
-
-```{r, results='asis'}
-child_objetivos <- knitr::knit_child('./relatorio/01objetivos.Rmd', quiet = TRUE)
-cat(child_objetivos, sep = '\n')  
 ```
 
 # Análise descritiva

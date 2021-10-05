@@ -88,7 +88,7 @@ radar_plot <- function(colonia){
                  min(x), max(x))
     })
   
-  radar_plot <- data.frame(min=0, max=1, media_geral, media_colonia) %>% t() %>% as.data.frame()
+  radar_plot <- data.frame(max=1, min=0, media_geral, media_colonia) %>% t() %>% as.data.frame()
   
   # plot with default options:
   radarchart( radar_plot  , axistype=1 , 
