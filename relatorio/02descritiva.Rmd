@@ -1,6 +1,11 @@
-```{r}
-selectInput('in_col','Selecione uma variável', choices = c("Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos"))
 
+```{r}
+anali() %>% make_table
+```
+Verificando o coeficiente de variação temos que o tamanho dos discos tem uma baixa dispersão dos dados, as variaveis diametro do canudo e peso uma media dispersão e as demais variveis possuem uma alta dispersão dos dados.
+
+```{r}
+selectInput('in_col','Deseja filtrar por estação', choices = c("Não"="Não", "Sim"="Sim"))
 
 plotOutput('col')
 
@@ -12,15 +17,21 @@ textOutput('output_analise_1')
 data <- as.data.frame(data)
 
 output$col <- renderPlot({
-  col(data[,input$in_col])
+  graf<-
+  if(input$in_col == "Não"){
+    graf<-col()
+  }else{
+    col1()
+  }
+  return(graf)
 })
 
 output$output_analise_1 <- renderText({
   r <- ''
-  if(input$in_col == "n_potes_mel"){
+  if(input$in_col == "Não"){
     r <- 'Existe uma grande varianção de numero de potes de mel com a colonia 7 com 20 potes de mel e colonia 9 com 627 colonia '
   } else{
-    r <- 'Não existe uma grande variabilidade do número de discos entre as colonias'
+    r <- 'Podemos verificar que a estação que existe mais produção de potes de mel é na primavera seguida do inverno, e a estção que houve a menor produção foi o Verão'
   }
   return(r)
 })
@@ -28,7 +39,7 @@ output$output_analise_1 <- renderText({
 
 ```{r}
 selectInput('in_hist_box', 'Selecione uma variável', 
-            choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop",
+            choices = c("Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos","Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop",
                         'Peso a cada 100 abelhas' = 'peso_100_abelhas'))
 
 plotOutput('hist_box')
@@ -47,7 +58,11 @@ output$hist_box <- renderPlot({
 
 output$output_analise_2 <- renderText({
   r <- ''
-  if(input$in_hist_box == 'comp_canudo'){
+  if(input$in_hist_box == 'n_potes_mel'){
+    r<-'Os dados estão distribuidos com uma concentração a esquerda com media em torno de 15, e possui outliers a direita' 
+  }else if(input$in_hist_box == 'n_discos'){
+    r<-'Os dados estão distribuidos com uma concentração a esquerda com media em torno de 12,5, e possui outliers a direita'
+  }else if(input$in_hist_box == 'comp_canudo'){
     r <- 'Os dados estão distribuidos de forma relativamente homogenea entre 0 e 12, e possui poucos outliers a direita '
   }else if(input$in_hist_box == 'diam_canudo'){
     r <- 'Existe uma grande concentração dos dados em torno de 4 e existe poucos outliers a esquerda'

@@ -38,3 +38,4 @@ mutate(decisao = ifelse(p.value > 0.05, 'Não rejeita H0', 'Rejeita H0')) %>%
 mutate(p.value = round(as.numeric(p.value), round_num)) %>%
 return()
 }
+

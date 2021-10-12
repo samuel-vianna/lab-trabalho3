@@ -6,6 +6,7 @@ library(corrplot)
 library(leaflet)
 library(visdat)
 library(plotly)
+library(EnvStats)
 source('./00manipulando_dados.R')
 
 ##### verificando presenÃ§a de NA #####
@@ -54,14 +55,26 @@ graf_linha<-function(variavel){
 }
 
 
-col<-function(var){
-  data %>% ggplot(aes(x=colonias, y=var)) + geom_bar(stat='identity', fill=fill_color) +
+col<-function(){
+  data %>% ggplot(aes(x=colonias, y=n_potes_mel)) + geom_bar(stat='identity', fill=fill_color) +
     coord_flip() +
     theme_minimal() +
     geom_text(
       aes(label = stat(y)), 
-      stat = 'summary', fun = sum, hjust = -0.5
-    )
+      stat = 'summary', fun = sum, hjust = -0.5)+
+    labs(y="Número de potes de mel",x="Colonias")
+}
+
+
+col1<-function(){
+  data %>% ggplot(aes(x=reorder(colonias, +n_potes_mel), y=n_potes_mel, fill = estacao)) + geom_bar(stat='identity') +
+    coord_flip() +
+    theme_minimal() +
+    geom_text(
+      aes(label = stat(y),group = colonias), 
+      stat = 'summary', fun = sum, hjust = -0.5)+
+    scale_fill_manual(values = c("dodgerblue4","orange3","forestgreen","yellow3"))+
+    labs(y="Número de potes de mel",x="Colonias", fill= "Estação")
 }
 
 ################ radar plot
@@ -128,4 +141,24 @@ corre<-function(banco){
                      addCoef.col = 'black', addgrid.col = 'black',
                      diag=F, tl.col = 'black')
 
+}
+
+anali<-function(){
+  banco<-data[,c(3:9,11)]
+  options(scipen = 999)
+  variancia<-apply(banco, 2, var)
+  mediana<-apply(banco, 2, mean)
+  media<-apply(banco, 2, median)
+  min<-apply(banco,2,min)
+  max<-apply(banco,2,max)
+  cvs<-apply(banco, 2,cv)
+  format(variancia, scientific = FALSE)
+  format(media, scientific = FALSE)
+  format(mediana, scientific = FALSE)
+  format(min, scientific = FALSE)
+  format(max, scientific = FALSE)
+  format(cvs, scientific = FALSE)
+  rbind(variancia,mediana,media,min,max,cvs) %>% as.data.frame(row.names = T)%>%
+    mutate(Medidas = c("Variancia","Mediana", "Media","Minimo", "Maximo", "Coeficiente de Variação"))%>%
+    relocate(Medidas)
 }
