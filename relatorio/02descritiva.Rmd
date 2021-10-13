@@ -111,25 +111,6 @@ output$output_radar_2 <- renderPlot({
 ```
 
 
-## Análise por grupos
-
-```{r}
-selectInput('in_time_plot', 'Selecione uma variável', 
-            choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo", "Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop", 'Peso a cada 100 abelhas' = 'peso_100_abelhas'))
-
-
-plotlyOutput('time_plot')
-```
-
-
-```{r, context='server', echo=T}
-data<-as.data.frame(data)
-
-output$time_plot <- renderPlotly({
-  graf_linha(data[,input$in_time_plot])
-})
-```
-
 Podemos perceber que na maioria das variaveis existe uma alteração com o passar dos meses no mesmo momento, com diferença da força das variação com diferentes colonias
 
 ## Dados de acordo com a colônia e estação
@@ -163,20 +144,21 @@ output$output_grafico_disp <- renderPlot({
 
 Podemos perceber que existe uma alteração de aumento e diminuição com o passar das estações e isto tambem acontece quando modificamos a variavel do x entre as colonias.
 
-## Correlação dos dados
+## Análise por grupos ao longo do tempo
 
 ```{r}
-corre(data)
+selectInput('in_time_plot', 'Selecione uma variável', 
+            choices = c("Comprimento do canudo"="comp_canudo","Diametro do canudo"="diam_canudo", "Número de potes de mel"="n_potes_mel","Número de discos"= "n_discos","Tamanho dos discos"="tam_discos","Peso"="peso","Estimativa populacional"="est_pop", 'Peso a cada 100 abelhas' = 'peso_100_abelhas'))
+
+
+plotlyOutput('time_plot')
 ```
 
 
+```{r, context='server', echo=T}
+data<-as.data.frame(data)
 
-Pode-se notar uma forte correlação linear positiva entre o número de discos e a estimativa da população, além de correlações lineares positivas moderadas entre os seguintes pares de variáveis:
-
-- diâmetro do canudo x comprimento do canudo
-- número de discos x número de potes de mel
-- peso x número de potes de mel
-- estimativa da população x número de potes de mel
-- estimativa da população x tamanho dos discos
-- estimativa da população x peso
-
+output$time_plot <- renderPlotly({
+  graf_linha(data[,input$in_time_plot])
+})
+```

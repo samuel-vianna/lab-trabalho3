@@ -18,4 +18,63 @@ output$output_normal <- DT::renderDataTable({
 Como visto nos testes acima, rejeita-se a hipótese de normalidade para todas as variáveis.
 
 
+## Correlação dos dados
 
+```{r}
+corre(data)
+```
+
+
+
+Pode-se notar uma forte correlação linear positiva entre o número de discos e a estimativa da população, além de correlações lineares positivas moderadas entre os seguintes pares de variáveis:
+
+- diâmetro do canudo x comprimento do canudo
+- número de discos x número de potes de mel
+- peso x número de potes de mel
+- estimativa da população x número de potes de mel
+- estimativa da população x tamanho dos discos
+- estimativa da população x peso
+
+
+```{r}
+teste_cor <- function(x) {
+  r <- cor.test(data$n_potes_mel, x, method='spearman')
+  data.frame(rho= r$estimate, p=r$p.value) %>% round(4) %>%
+  return()
+}
+
+data[,ind_var] %>% select(-n_potes_mel) %>% sapply(teste_cor) %>% 
+  t() %>% kable(align='c', booktabs=T)
+```
+
+Considerando 5% de significância, temos que a correlação do número de potes de mel é significativa para as variáveis:
+
+- Diamêtro do canudo
+- Número de discos
+- Peso
+- População estimada
+
+```{r}
+teste_cor_quanti <- function() {
+  x   = c(rep(1,73),rep(2,119))
+  y   = c(rep(0,0),rep(1,2),rep(2,6),rep(3,7),rep(4,3),rep(5,4),
+          rep(6,4),rep(7,9),rep(8,11),rep(9,11),rep(10,6),rep(11,10),
+          rep(0,16),rep(1,14),rep(2,10),rep(3,9),rep(4,13),rep(5,12),
+          rep(6,12),rep(7,7),rep(8,5),rep(9,5),rep(10,10),rep(11,6))
+  rq1<-cor.test(y, x, method="kendall")
+  x1   = c(rep(1,73),rep(2,119))
+  y1   = c(rep(0,24),rep(1,14),rep(2,27),rep(3,8),rep(4,24),rep(5,34),
+           rep(6,21),rep(7,40))
+  rq2<-cor.test(y1, x1, method="kendall")
+  
+  d1 <- data.frame(rho=rq1$estimate,p=rq1$p.value)
+  row.names(d1) <- 'meses'
+  d2 <- data.frame(rho=rq2$estimate,p=rq2$p.value)
+  row.names(d2) <- 'estações'
+  rbind(d1,d2) %>% round(4) %>%
+    return()
+}
+teste_cor_quanti() %>% kable(align='c', booktabs=T)
+```
+
+Considerando 5% de significância, pode-se considerar que há associação do número de potes de mel produzidos com os meses e as estações.

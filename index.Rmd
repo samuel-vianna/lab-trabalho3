@@ -41,11 +41,3 @@ child_testes <- knitr::knit_child('./relatorio/03testes.Rmd', quiet = TRUE)
 cat(child_testes, sep = '\n')  
 ```
 
-# Conclusão
-
-```{r, results='asis'}
-child_conclusao <- knitr::knit_child('./relatorio/04conclusao.Rmd', quiet = TRUE)
-cat(child_conclusao, sep = '\n')  
-```
-
-

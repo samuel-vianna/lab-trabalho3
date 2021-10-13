@@ -26,7 +26,6 @@ Além do mais, a fim de procurar outras perspectivas para os dados, foram adicio
 
 Com base nisso, esse trabalho possui os seguintes objetivos:
 
-- Analisar o desempenho das colônias ao longo do ano;
-- Analisar a diferença ente as colônias;
-- Buscar variáveis que estejam relacionadas com a produção de mel;
-- Criar um modelo capaz de prever a quantidade de mel produzida por uma colônia.
+- Analisar a diferença de produção de mel entre as colônias;
+- Analisar a diferença de desempenho ao longo dos meses e estações;
+- Buscar variáveis que estejam relacionadas com a produção de mel.

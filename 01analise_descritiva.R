@@ -9,7 +9,7 @@ library(plotly)
 library(EnvStats)
 source('./00manipulando_dados.R')
 
-##### verificando presenÃ§a de NA #####
+##### verificando presenÃƒÂ§a de NA #####
 vis_dat(data)
 
 fill_color <- 'gold3'
@@ -32,7 +32,7 @@ grafico_disp <- function(data, x, y){
   y_var <- unlist(data[,y])
   
   data %>% ggplot(aes(x=x_var, y = y_var)) + geom_jitter(width = 0.1) +
-    ggtitle('Grï¿½fico de dispersï¿½o') +
+    ggtitle('Gráfico de dispersão') +
     stat_summary(fun=mean, geom='line', aes(y= y_var, group=1), col='red', lwd=0.8) +
     stat_summary(fun=mean, geom='point', col='blue', size=2) +
     stat_summary(fun=median, geom='line', aes(y= y_var, group=1), col='gold3', lwd=0.8) +
@@ -47,16 +47,16 @@ graf_linha<-function(variavel){
     geom_line() + theme(legend.position = 'bottom') + theme_minimal() + 
     geom_vline(xintercept = which(levels(data$meses) %in% c('Mar', 'Jun','Sep', 'Dec')),
                size=1, col='gray', alpha=0.5 ) +
-    geom_text(aes(x=3-0.5, y=max(variavel), label='Outono'), angle=90, hjust=1.5,colour='black') + 
-    geom_text(aes(x=6-0.5, y=max(variavel), label='Inverno'), angle=90, hjust=1.5, colour='black') + 
-    geom_text(aes(x=9-0.5, y=max(variavel), label='Primavera'), angle=90, hjust=1.5, colour='black') + 
-    geom_text(aes(x=12-0.5, y=max(variavel), label='Verï¿½o'), angle=90, hjust=1.5, colour='black') 
+    geom_text(aes(x=3-0.5, y=max(variavel), label='Verão'), angle=90, hjust=1.5, colour='black') +
+    geom_text(aes(x=6-0.5, y=max(variavel), label='Outono'), angle=90, hjust=1.5,colour='black') + 
+    geom_text(aes(x=9-0.5, y=max(variavel), label='Inverno'), angle=90, hjust=1.5, colour='black') + 
+    geom_text(aes(x=12-0.5, y=max(variavel), label='Primavera'), angle=90, hjust=1.5, colour='black')
   ggplotly(a, tooltip = c("x","y","group"))  
 }
 
 
 col<-function(){
-  data %>% ggplot(aes(x=colonias, y=n_potes_mel)) + geom_bar(stat='identity', fill=fill_color) +
+  data %>% ggplot(aes(x=reorder(colonias, +n_potes_mel), y=n_potes_mel)) + geom_bar(stat='identity', fill=fill_color) +
     coord_flip() +
     theme_minimal() +
     geom_text(
@@ -97,8 +97,7 @@ radar_plot <- function(colonia){
     filter(colonias == colonia) %>%
     select(3:9) %>%
     sapply(., function(x) {
-      normalizar(ifelse(sd(x)/mean(x) < 1, mean(x), median(x)),
-                 min(x), max(x))
+      normalizar(median(x), min(x), max(x))
     })
   
   radar_plot <- data.frame(max=1, min=0, media_geral, media_colonia) %>% t() %>% as.data.frame()
@@ -132,12 +131,12 @@ medidas<-function(x,y){
     ) %>% as.data.frame()  
 }
 
-## correlação
+## correlaÃ§Ã£o
 
 corre<-function(banco){
   ind_var <- sapply(banco, is.numeric)
   data[ind_var] %>%
-  cor() %>% corrplot(method='color', type='lower',
+  cor(method='spearman') %>% corrplot(method='color', type='lower', 
                      addCoef.col = 'black', addgrid.col = 'black',
                      diag=F, tl.col = 'black')
 
@@ -159,6 +158,6 @@ anali<-function(){
   format(max, scientific = FALSE)
   format(cvs, scientific = FALSE)
   rbind(variancia,mediana,media,min,max,cvs) %>% as.data.frame(row.names = T)%>%
-    mutate(Medidas = c("Variancia","Mediana", "Media","Minimo", "Maximo", "Coeficiente de Variação"))%>%
+    mutate(Medidas = c("Variancia","Mediana", "Media","Minimo", "Maximo", "Coeficiente de VariaÃ§Ã£o"))%>%
     relocate(Medidas)
 }
