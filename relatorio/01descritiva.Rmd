@@ -1,0 +1,77 @@
+# Valores faltantes
+
+```{r}
+selectInput('input_na_graf', 'Selecione um grupo de variáveis', 
+            choices = c('Características parto'= 'p1',
+                        'Parâmetros reprodutivos'= 'p2',
+                        'Parâmetros produtivos'= 'p3',
+                        'Composição do leite'= 'p4',
+                        'Parâmetros climáticos'= 'p5'))
+
+plotOutput('output_na_graf')
+```
+
+```{r, context='server', echo=F}
+output$output_na_graf <- renderPlot({
+  get(input$input_na_graf)
+})
+```
+
+# Distribuição dos dados
+
+Os gráficos a seguir apresentam a distribuição dos dados de acordo com a variável resposta "situação do parto".
+
+## Variáveis qualitativas
+
+```{r}
+na_data %>% arrange(na) %>%
+  mutate(var = factor(var, levels=var)) %>% filter(na > 5) %>%
+  ggplot(aes(x=var,y=na, fill=group)) + geom_bar(stat = 'identity') + coord_flip() +
+  geom_label(aes(label=paste(na, '%'), y=na), fill='white') +
+  theme_minimal() + ggtitle('Variáveis com maior % de dados faltantes') +
+  labs(x='NA(%)', y='Variável', fill='grupo de variáveis')
+```
+
+```{r}
+selectInput('input_char_graf', 'Selecione uma variável categórica', 
+            choices = names(data)[sapply(data, is.character)][-c(1,2)])
+
+plotOutput('output_char_graf')
+```
+
+```{r, context='server', echo=F}
+output$output_char_graf <- renderPlot({
+  g1_desc_char <- data %>% ggplot(aes(x=`Situação do parto`, fill=as.data.frame(data)[,input$input_char_graf])) +
+    geom_bar(stat='count') + theme_minimal() + labs(y='Frequência', fill=input$input_char_graf)
+
+g2_desc_char <- data %>% ggplot(aes(x=`Situação do parto`, fill=as.data.frame(data)[,input$input_char_graf])) +
+  geom_bar(position='fill') + theme_minimal() + labs(y='Frequência', fill=input$input_char_graf)
+
+grid.arrange(g1_desc_char, g2_desc_char, ncol=1)
+})
+```
+
+## Variáveis quantitativas
+
+```{r}
+selectInput('input_num_graf', 'Selecione uma variável numérica', 
+            choices = names(data)[sapply(data, is.numeric)])
+
+plotOutput('output_num_graf')
+
+plotOutput('output_num_graf2')
+```
+
+```{r, context='server', echo=F}
+output$output_num_graf <- renderPlot({
+ data %>% ggplot(aes(x=`Situação do parto`, y=as.data.frame(data)[,input$input_num_graf], fill=`Situação do parto`)) +
+    geom_boxplot() + theme_minimal() + labs(y=input$input_num_graf) + guides(fill=F)
+})
+
+output$output_num_graf2 <- renderPlot({
+ data %>% ggplot(aes(y=as.data.frame(data)[,input$input_num_graf], fill=`Situação do parto`)) +
+                    geom_histogram(col='white') + labs(y=input$input_num_graf) + 
+    theme_minimal() + facet_grid(~ `Situação do parto`) + coord_flip() +
+    guides(fill=F)
+})
+```

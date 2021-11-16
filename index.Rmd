@@ -6,14 +6,26 @@ output:
 runtime: shiny_prerendered
 ---
 
+<style>
+#sidebar h2 {
+    background-color: #186818;
+}
+
+h1, h2, h3, h4, h5, h6, legend {
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    color: #186818;
+}
+</style>
+
 ```{r, message=F, warning=F, echo=F}
 knitr::opts_chunk$set(message = F, warning = F, echo=F)
 library(shiny)
 library(knitr)
 library(tidyverse)
 library(corrplot)
-library(plotly)
 library(fmsb)
+library(plotly)
 library(stringr)
 source('./00manipulando_dados.R')
 source("./01analise_descritiva.R")
@@ -30,14 +42,18 @@ cat(child_intro, sep = '\n')
 # Análise descritiva
 
 ```{r, results='asis'}
-child_descritiva <- knitr::knit_child('./relatorio/02descritiva.Rmd', quiet = TRUE)
+child_descritiva <- knitr::knit_child('./relatorio/01descritiva.Rmd', quiet = TRUE)
 cat(child_descritiva, sep = '\n')  
 ```
 
 # Testes
 
-```{r, results='asis'}
-child_testes <- knitr::knit_child('./relatorio/03testes.Rmd', quiet = TRUE)
+```{r, results='asis', eval=F}
+child_testes <- knitr::knit_child('./relatorio/02testes.Rmd', quiet = TRUE)
 cat(child_testes, sep = '\n')  
+```
+
+```{r, context='server'}
+
 ```
 

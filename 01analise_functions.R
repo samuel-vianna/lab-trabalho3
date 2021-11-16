@@ -12,7 +12,7 @@ source('./00manipulando_dados.R')
 
 ######################################################
 
-fill_color <- 'gold3'
+fill_color <- '#186818'
 
 ######################################################
 
@@ -34,7 +34,7 @@ rbind(shapiro,ad,cvm, lillie) %>% as.data.frame(row.names = F) %>%
 select(-c(statistic, data.name)) %>%
 relocate(method) %>%
 mutate(method = str_replace_all(method, 'normality test', '')) %>%
-mutate(decisao = ifelse(p.value > 0.05, 'Não rejeita H0', 'Rejeita H0')) %>%
+mutate(decisao = ifelse(p.value > 0.05, 'N?o rejeita H0', 'Rejeita H0')) %>%
 mutate(p.value = round(as.numeric(p.value), round_num)) %>%
 return()
 }

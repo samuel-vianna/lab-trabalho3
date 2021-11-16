@@ -1,0 +1,26 @@
+## Testando normalidade dos dados
+
+```{r}
+ind_var <- sapply(data, is.numeric)
+
+selectInput('input_normal', 'Selecione uma variável', 
+            choices = names(data)[ind_var])
+
+DT::dataTableOutput('output_normal')
+```
+
+```{r, context='server', echo=T}
+output$output_normal <- DT::renderDataTable({
+  teste_normal(unlist(data[,input$input_normal]))
+})
+```
+
+Como visto nos testes acima, rejeita-se a hipótese de normalidade para todas as variáveis.
+
+
+## Correlação dos dados
+
+```{r}
+corre(data)
+```
+

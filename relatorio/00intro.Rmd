@@ -1,31 +1,26 @@
-A fim de fixar os conhecimentos passados em sala de aula, foi passado um banco de dados com informações sobre 16 colônias de abelhas durante um ano.
+A fim de fixar os conhecimentos passados em sala de aula, foi passado um banco de dados com informações referentes ao nascimento de bovinos.
 
-Por se tratar de uma análise entre as colônias de um determinado apiário, os dados foram considerados como populações.
 
 ## Variáveis
 
-O banco de dados fornecido contém as seguintes variáveis:
+O banco de dados fornecido contém `ncol(data)` variáveis e `nrow(data)` observações, divididas nos seguintes grupos:
 
-- Meses;
-- Colonias;
-- Comprimento do canudo;
-- Diametro do canudo;
-- Número de potes de mel;
-- Número de discos;
-- Tamanho dos discos;
-- Peso;
-- Estatistica populacional
+- Características parto
+- Parâmetros reprodutivos
+- Parâmetros produtivos
+- Composição do leite
+- Parâmetros climáticos
 
-Além do mais, a fim de procurar outras perspectivas para os dados, foram adicionadas as seguintes variáveis:
+Sendo que a variável de interesse é a variável categória "situação do parto", dividida em 3 níveis:
 
-- Estação
-- Peso a cada 100 abelhas
-
+- Normal
+- Ajudado posicionado
+- Ajudado difícil
 
 # Objetivos
 
 Com base nisso, esse trabalho possui os seguintes objetivos:
 
-- Analisar a diferença de produção de mel entre as colônias;
-- Analisar a diferença de desempenho ao longo dos meses e estações;
-- Buscar variáveis que estejam relacionadas com a produção de mel.
+- Avaliar a correlação entre as variáveis com a situação do parto a fim de verificar quais fatores mais influenciam no parto
+- Buscar meios de realizar agrupamentos entre os partos de acordo com suas características
+- Criar um modelo preditivo capaz de prever o tipo de parto com base nas condições

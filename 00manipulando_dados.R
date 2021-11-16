@@ -1,30 +1,47 @@
 library(readxl)
-library(dplyr)
-library(stringr)
+library(tidyverse)
+
+library(visdat)
+library(gridExtra)
 
 ##### reading the data #####
-data <- read_xlsx('./data/Dados abelhas.xlsx', sheet = 1)
+data <- read_xlsx('./data/Distocia.xlsx', sheet = 1, skip = 1, na = 'NA')
 
-# renaming columns
-names(data) <- c(
-  'meses', 'colonias', 'comp_canudo', 'diam_canudo',
-  'n_potes_mel', 'n_discos', 'tam_discos', 'peso', 'est_pop'
-)
+data <- as.data.frame(data)
 
-data$meses <- factor(month.abb[data$meses], levels = month.abb)
-data$colonias <- factor(data$colonias, levels = paste('COL', c(1:13, 15:17)))
-
-data$estacao<-case_when(
-  data$meses %in% month.abb[1:3] ~ 'Verao' ,
-  data$meses %in% month.abb[4:6] ~ 'Outono' ,
-  data$meses %in% month.abb[7:9] ~ 'Inverno' ,
-  TRUE ~ 'Primavera'
-)
-
-data$peso_100_abelhas <- (data$peso / (data$est_pop / 100))  
-
-summary(data$est_pop / 1000)  
+data[,18:22] <- data[,18:22] %>% sapply(as.numeric)
 
 ###############################
-write.table(data, './data/data.csv', sep=',')
+# write.table(data, './data/data.csv', sep=',')
+
+##############################################################
+
+dados_parto <- data[,2:5]
+dados_reprodutivos <- data[,6:10]
+dados_produtivos <- data[,11:17]
+dados_leite <- data[,18:24]
+dados_clima <- data[,25:30]
+
+p1 <- vis_dat(dados_parto, palette = "cb_safe")
+p2 <- vis_dat(dados_reprodutivos, palette = "cb_safe")
+p3 <- vis_dat(dados_produtivos, palette = "cb_safe")
+p4 <- vis_dat(dados_leite, palette = "cb_safe")
+p5 <- vis_dat(dados_clima, palette = "cb_safe")
+
+# plist <- mget(paste0('p',1:5))
+# nCol <- floor(sqrt(length(plist)))
+# do.call("grid.arrange", c(plist, ncol=nCol))
+
+##############################################################
+
+prop_na <- round(apply(data, 2, function(x) sum(is.na(x)) / length(x)) * 100, 3)
+
+group_name <- c('ind',
+                rep('Características do parto', 4),
+                rep('Parâmetros reprodutivos', 5),
+                rep('Parâmetros produtivos', 7),
+                rep('Composição do leite', 7),
+                rep('Parâmetros climáticos', 6))
+
+na_data <- data.frame(var=names(data), na=prop_na, group=group_name)
 
