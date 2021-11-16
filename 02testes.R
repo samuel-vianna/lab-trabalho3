@@ -1,54 +1,42 @@
-library(ggplot2)
-library(gridExtra)
-library(dplyr)
-library(leaflet)
-library(corrplot)
-library(leaflet)
 library(readxl)
-library(mblm)
-source('./00manipulando_dados.R')
-#SO TRISTEZA 
-fit0<-lm(n_potes_mel~comp_canudo,data)
-fit1<-mblm(n_potes_mel~comp_canudo,data)
-summary(fit1)
-par(mfrow = c(1,1), mar = c(4, 5, 2, 1), pch = 19)
-plot(data$n_potes_mel~data$comp_canudo, pch = 19)
-abline(fit1, lty = 1, lwd = 2, col = "red")
-text(4.5,4, "Modelo Theil-Kendall", col = "red")
-abline(fit0, lty = 1, lwd = 2, col = "blue")
-text(4,8, "Modelo de regressão linear", col = "blue")
+library(Amelia)
+library(Boruta)
+library(tidyverse)
 
-# coeficiente de variação
-
-data$cat_comp_canudo<-case_when(
-  data$comp_canudo <= 6.314583 ~ 'Pequeno',
-  TRUE ~ 'Grande'
-)
-data$cat_diam_canudo<-case_when(
-  data$diam_canudo <= 4 ~ 'Pequeno',
-  TRUE ~ 'Grande'
-)
-data$cat_n_potes_mel<-case_when(
-  data$n_potes_mel <= 23.265625 ~ 'Pequena',
-  TRUE ~ 'Grande'
-)
-data$cat_n_discos<-case_when(
-  data$n_discos <= 11.1510417 ~ 'Pequena',
-  TRUE ~ 'Grande'
-)
-data$cat_tam_discos<-case_when(
-  data$tam_discos <= 6.5000000 ~ 'Pequeno',
-  TRUE ~ 'Grande'
-)
-data$cat_peso<-case_when(
-  data$peso <= 5.1 ~ 'Leve',
-  TRUE ~ 'Pesado'
-)
-data$cat_est_pop<-case_when(
-  data$est_pop <= 2970.8531250 ~ 'Pequena',
-  TRUE ~ 'Grande'
-)
-data$cat_peso_100_abelhas<-case_when(
-  data$peso_100_abelhas <= 0.1902503 ~ 'Leve',
-  TRUE ~ 'Pesado'
-)
+data <- read_xlsx('./data/Distocia.xlsx', sheet = 1, skip = 1, na = 'NA')
+data <- as.data.frame(data)
+data_a<-data[c(2:24,26:30)]
+str(data_a)
+summary(data_a)
+data_a$`Situação do parto`<- as.factor(data_a$`Situação do parto`)
+data_a$`Bezerro deste parto`<- as.factor(data_a$`Bezerro deste parto`)
+data_a$`Tipo de prenhez`<- as.factor(data_a$`Tipo de prenhez`)
+data_a$Multiparidade<- as.factor(data_a$Multiparidade)
+data_a$`Estações do ano`<- as.factor(data_a$`Estações do ano`)
+data_a$`ES (%)`<-as.numeric(data_a$`ES (%)`)
+data_a$`ST (%)`<-as.numeric(data_a$`ST (%)`)
+data_a$`LACT (%)`<-as.numeric(data_a$`LACT (%)`)
+data_a$`PROT (%)`<-as.numeric(data_a$`PROT (%)`)
+data_a$`GORD (%)`<-as.numeric(data_a$`GORD (%)`)
+str(data_a)
+missmap(data_a)
+amelia_bank <- amelia(data_a, m=3, parallel = "multicore",noms=c('Situação do parto','Bezerro deste parto',
+                                                                 'Tipo de prenhez','Multiparidade',
+                                                                 'Estações do ano'))
+set.seed(111)
+boruta.bank_train <- Boruta(`Situação do parto`~., data = amelia_bank$imputations[[1]], doTrace = 2)
+print(boruta.bank_train)
+boruta.bank <- TentativeRoughFix(boruta.bank_train)
+print(boruta.bank)
+plot(boruta.bank, xlab = "", xaxt = "n")
+lz<-lapply(1:ncol(boruta.bank$ImpHistory),function(i)
+  boruta.bank$ImpHistory[is.finite(boruta.bank$ImpHistory[,i]),i])
+names(lz) <- colnames(boruta.bank$ImpHistory)
+Labels <- sort(sapply(lz,median))
+axis(side = 1,las=2,labels = names(Labels),
+     at = 1:ncol(boruta.bank$ImpHistory), cex.axis = 0.7)
+getSelectedAttributes(boruta.bank, withTentative = F)
+bank_df <- attStats(boruta.bank)
+print(bank_df)
+bank_dft <- attStats(boruta.bank_train)
+print(bank_dft)
