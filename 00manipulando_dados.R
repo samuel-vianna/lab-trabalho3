@@ -45,3 +45,54 @@ group_name <- c('ind',
 
 na_data <- data.frame(var=names(data), na=prop_na, group=group_name)
 
+
+
+########################################################
+
+data_clean <- data[,-c(1,which(na_data$na > 40),25)] %>% na.exclude() 
+  # mutate_if(is.character, as.factor) %>% 
+  # mutate_if(is.factor, as.numeric)
+
+set.seed(555)
+amostra <- sample(1:nrow(data_clean), round(nrow(data_clean) * 0.7), replace = F)
+
+treino <- data_clean[amostra,]
+
+teste <- data_clean[-amostra,]
+
+## GLM
+library(MASS)
+
+model <- polr(`Situação do parto` ~ ., data=treino)
+
+model
+
+
+aic <- stepAIC(model)
+
+## ARVORE 
+
+library(rpart)
+library(rpart.plot)
+
+tree <- rpart(`Situação do parto` ~ ., data=treino)
+
+biruta <- Boruta::Boruta(`Situação do parto` ~., data=treino)
+
+## KNN
+
+library(class)
+
+knn_r <- knn(train=treino, test=teste, cl = treino[,1], k=10)
+
+## CURVA ROC PARA O KNN
+
+library(pROC)
+
+a <- roc(knn_r ~ teste[,1])
+
+plot(a, print.thres=T, print.thres.cex=1.25, print.auc=T, print.auc.x=1, print.auc.y=1, print.auc.cex=1.5)
+
+library(gmodels)
+
+tabela <- table(knn = knn_r, teste = teste[,1])
