@@ -21,6 +21,6 @@ Sendo que a variável de interesse é a variável categória "situação do part
 
 Com base nisso, esse trabalho possui os seguintes objetivos:
 
-- Avaliar a correlação entre as variáveis com a situação do parto a fim de verificar quais fatores mais influenciam no parto
+- Selecionar variáveis que contribuem para a predição da situação do parto
 - Buscar meios de realizar agrupamentos entre os partos de acordo com suas características
 - Criar um modelo preditivo capaz de prever o tipo de parto com base nas condições

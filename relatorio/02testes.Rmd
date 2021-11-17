@@ -1,26 +1,86 @@
-## Testando normalidade dos dados
+
+
 
 ```{r}
-ind_var <- sapply(data, is.numeric)
+treino_boruta <- treino_num[,c('Situação do parto',"Bezerro deste parto", "ECC", "Multiparidade", "PS (mês)","IEP (mês)","Nº SC","PA (kg/L/lactação)","DEL (dias)","PAT (kg/L/lactação)","PMDT (kg/L/dia)","DELA (dias)","ITU","Temp (ºC)","UR (%)")]
 
-selectInput('input_normal', 'Selecione uma variável', 
-            choices = names(data)[ind_var])
-
-DT::dataTableOutput('output_normal')
+teste_boruta <- teste_num[,c('Situação do parto',"Bezerro deste parto", "ECC", "Multiparidade", "PS (mês)","IEP (mês)","Nº SC","PA (kg/L/lactação)","DEL (dias)","PAT (kg/L/lactação)","PMDT (kg/L/dia)","DELA (dias)","ITU","Temp (ºC)","UR (%)")]
 ```
 
-```{r, context='server', echo=T}
-output$output_normal <- DT::renderDataTable({
-  teste_normal(unlist(data[,input$input_normal]))
-})
-```
+## KNN
 
-Como visto nos testes acima, rejeita-se a hipótese de normalidade para todas as variáveis.
-
-
-## Correlação dos dados
+### Modelo com todas as variáveis
 
 ```{r}
-corre(data)
+library(caret)
+library(pROC)
+
+trControl <- trainControl(method  = "cv",
+                          number  = 5)
+
+fit_knn_total <- train(as.factor(`Situação do parto`) ~ .,
+             method     = "knn",
+             tuneGrid   = expand.grid(k = 3:10),
+             trControl  = trControl,
+             metric     = "Accuracy",
+             data       = treino_num)
+
+pred <- predict(fit_knn_total, teste_num)
+
+plot(roc(pred ~ teste_num[,1]), 
+     print.thres=T, print.thres.cex=1.25, print.auc=T, print.auc.x=1, print.auc.y=1, print.auc.cex=1.5)
+
 ```
 
+
+### Modelo com seleção de varáveis
+
+```{r}
+trControl <- trainControl(method  = "cv",
+                          number  = 5)
+
+fit_knn_boruta <- train(as.factor(`Situação do parto`) ~ .,
+             method     = "knn",
+             tuneGrid   = expand.grid(k = 3:10),
+             trControl  = trControl,
+             metric     = "Accuracy",
+             data       = treino_boruta)
+
+pred <- predict(fit_knn_boruta, teste_boruta)
+
+plot(roc(pred ~ teste_boruta[,1]), 
+     print.thres=T, print.thres.cex=1.25, print.auc=T, print.auc.x=1, print.auc.y=1, print.auc.cex=1.5)
+
+```
+
+
+## Árvore de decisão
+
+### Modelo com todas as variáveis
+
+```{r}
+library(rpart)
+library(rpart.plot)
+
+tree <- rpart(as.factor(`Situação do parto`) ~ ., data=treino_num)
+
+rpart.plot(tree)
+
+pred <- predict(tree, teste_num)
+
+plot(roc(apply(pred, 1, which.max) ~ teste_num[,1]), 
+     print.thres=T, print.thres.cex=1.25, print.auc=T, print.auc.x=1, print.auc.y=1, print.auc.cex=1.5)
+```
+
+### Modelo com seleção de varáveis
+
+```{r}
+tree2 <- rpart(as.factor(`Situação do parto`) ~ ., data=treino_boruta)
+
+rpart.plot(tree2)
+
+pred <- predict(tree2, teste_boruta)
+
+plot(roc(apply(pred, 1, which.max) ~ teste_boruta[,1]), 
+     print.thres=T, print.thres.cex=1.25, print.auc=T, print.auc.x=1, print.auc.y=1, print.auc.cex=1.5)
+```

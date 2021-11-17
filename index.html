@@ -119,7 +119,18 @@
       <li><a href="#section-objetivos">Objetivos</a></li>
       <li><a href="#section-análise-descritiva">Análise descritiva</a></li>
       <li><a href="#section-valores-faltantes">Valores faltantes</a></li>
-      <li><a href="#section-testes">Testes</a></li>
+      <li><a href="#section-distribuição-dos-dados">Distribuição dos dados</a>
+      <ul>
+      <li><a href="#section-variáveis-qualitativas">Variáveis qualitativas</a></li>
+      <li><a href="#section-variáveis-quantitativas">Variáveis quantitativas</a></li>
+      </ul></li>
+      <li><a href="#section-remoção-de-valores-faltantes-e-divisão-dos-dados">Remoção de valores faltantes e divisão dos dados</a></li>
+      <li><a href="#section-testes">Testes</a>
+      <ul>
+      <li><a href="#section-seleção-de-variáveis">Seleção de variáveis</a></li>
+      <li><a href="#section-knn">KNN</a></li>
+      <li><a href="#section-árvore-de-decisão">Árvore de decisão</a></li>
+      </ul></li>
       </ul>
     </div>
     <div id="postamble" data-toggle="wy-nav-shift" class="status">
@@ -169,7 +180,7 @@ h1, h2, h3, h4, h5, h6, legend {
 <h1>Objetivos</h1>
 <p>Com base nisso, esse trabalho possui os seguintes objetivos:</p>
 <ul>
-<li>Avaliar a correlação entre as variáveis com a situação do parto a fim de verificar quais fatores mais influenciam no parto</li>
+<li>Selecionar variáveis que contribuem para a predição da situação do parto</li>
 <li>Buscar meios de realizar agrupamentos entre os partos de acordo com suas características</li>
 <li>Criar um modelo preditivo capaz de prever o tipo de parto com base nas condições</li>
 </ul>
@@ -191,7 +202,13 @@ h1, h2, h3, h4, h5, h6, legend {
 </div>
 </div>
 <p><div id="output_na_graf" class="shiny-plot-output" style="width:100%;height:400px;"></div></p>
-<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" width="768" /></p>
+</div>
+<div id="section-distribuição-dos-dados" class="section level1">
+<h1>Distribuição dos dados</h1>
+<p>Os gráficos a seguir apresentam a distribuição dos dados de acordo com a variável resposta “situação do parto”.</p>
+<div id="section-variáveis-qualitativas" class="section level2">
+<h2>Variáveis qualitativas</h2>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" width="768" /></p>
 <div class="form-group shiny-input-container">
 <label class="control-label" id="input_char_graf-label" for="input_char_graf">Selecione uma variável categórica</label>
 <div>
@@ -203,6 +220,9 @@ h1, h2, h3, h4, h5, h6, legend {
 </div>
 </div>
 <p><div id="output_char_graf" class="shiny-plot-output" style="width:100%;height:400px;"></div></p>
+</div>
+<div id="section-variáveis-quantitativas" class="section level2">
+<h2>Variáveis quantitativas</h2>
 <div class="form-group shiny-input-container">
 <label class="control-label" id="input_num_graf-label" for="input_num_graf">Selecione uma variável numérica</label>
 <div>
@@ -234,8 +254,56 @@ h1, h2, h3, h4, h5, h6, legend {
 </div>
 <p><div id="output_num_graf" class="shiny-plot-output" style="width:100%;height:400px;"></div><div id="output_num_graf2" class="shiny-plot-output" style="width:100%;height:400px;"></div></p>
 </div>
+</div>
+<div id="section-remoção-de-valores-faltantes-e-divisão-dos-dados" class="section level1">
+<h1>Remoção de valores faltantes e divisão dos dados</h1>
+<p>A fim de obter um conjunto de dados mais fácil de trabalhar, foram eliminadas todas as variáveis com a porcentagem de valores faltantes acima de 40%, além de remover as observações com algum valor faltante. Com isso, a quantidade de observações foi de 9120 para 7144, e a quantide de observações de 30 para 20.</p>
+<p>Além do mais, a fim de treinar os modelos, o banco foi dividio entre um subset de teste e outro de treino em uma proporção 70/30.</p>
+</div>
 <div id="section-testes" class="section level1">
 <h1>Testes</h1>
+<div id="section-seleção-de-variáveis" class="section level2">
+<h2>Seleção de variáveis</h2>
+<p>Após selecionar as variáveis relacionadas com a situação do parto pelo método Boruta, temos as seguintes variáveis:</p>
+<ul>
+<li>Bezerro deste parto</li>
+<li>ECC</li>
+<li>Multiparidade</li>
+<li>PS (mês)</li>
+<li>IEP (mês)</li>
+<li>Nº SC</li>
+<li>PA (Kg/L/lactação)</li>
+<li>DEL (dias)</li>
+<li>PAT (kg/L/lactação)</li>
+<li>PDMT (kg/L/dia)</li>
+<li>DELA (dias)</li>
+<li>ITU</li>
+<li>Temp (ºC)</li>
+<li>UR (%)</li>
+</ul>
+<p><img src="plot_zoom.png" width="50%" /></p>
+<p>Com base nisso, é possível realizar os próximos modelos com base em todas as variáveis e somente com as variáveis selecioandas pelo método do Boruta, a fim de verificar a diferença.</p>
+</div>
+<div id="section-knn" class="section level2">
+<h2>KNN</h2>
+<div id="section-modelo-com-todas-as-variáveis" class="section level3">
+<h3>Modelo com todas as variáveis</h3>
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" width="768" /></p>
+</div>
+<div id="section-modelo-com-seleção-de-varáveis" class="section level3">
+<h3>Modelo com seleção de varáveis</h3>
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" width="768" /></p>
+</div>
+</div>
+<div id="section-árvore-de-decisão" class="section level2">
+<h2>Árvore de decisão</h2>
+<div id="section-modelo-com-todas-as-variáveis-1" class="section level3">
+<h3>Modelo com todas as variáveis</h3>
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" width="768" /><img src="index_files/figure-html/unnamed-chunk-18-2.png" width="768" /></p>
+</div>
+<div id="section-modelo-com-seleção-de-varáveis-1" class="section level3">
+<h3>Modelo com seleção de varáveis</h3>
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" width="768" /><img src="index_files/figure-html/unnamed-chunk-19-2.png" width="768" /></p>
 
 <script type="application/shiny-prerendered" data-context="server">
 output$output_na_graf <- renderPlot({
@@ -263,7 +331,7 @@ output$output_num_graf <- renderPlot({
 
 output$output_num_graf2 <- renderPlot({
  data %>% ggplot(aes(y=as.data.frame(data)[,input$input_num_graf], fill=`Situação do parto`)) +
-                    geom_histogram(col='white') + 
+                    geom_histogram(col='white') + labs(y=input$input_num_graf) + 
     theme_minimal() + facet_grid(~ `Situação do parto`) + coord_flip() +
     guides(fill=F)
 })
@@ -275,9 +343,11 @@ output$output_num_graf2 <- renderPlot({
 <!--/html_preserve-->
 <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="execution_dependencies">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","bookdown","broom","bslib","cellranger","cli","colorspace","compiler","corrplot","crayon","crosstalk","data.table","datasets","DBI","dbplyr","digest","dplyr","ellipsis","EnvStats","evaluate","fansi","farver","fastmap","fmsb","forcats","fs","generics","ggplot2","glue","graphics","grDevices","grid","gridExtra","gtable","haven","highr","hms","htmltools","htmlwidgets","httpuv","httr","jquerylib","jsonlite","knitr","labeling","later","lazyeval","leaflet","leaflet.extras","lifecycle","lubridate","magrittr","methods","mime","modelr","munsell","nortest","pillar","pkgconfig","plotly","promises","purrr","R6","Rcpp","readr","readxl","reprex","rlang","rmarkdown","rmdformats","rstudioapi","rvest","sass","scales","shiny","stats","stringi","stringr","tibble","tidyr","tidyselect","tidyverse","tools","tzdb","utf8","utils","vctrs","viridisLite","visdat","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.3.0","4.0.3","0.24","0.7.10","0.3.1","1.1.0","3.1.0","2.0-2","4.0.3","0.90","1.4.2","1.2.0","1.14.2","4.0.3","1.1.1","2.1.1","0.6.28","1.0.7","0.3.2","2.4.0","0.14","0.5.0","2.1.0","1.1.0","0.7.1","0.5.1","1.5.0","0.1.1","3.3.5","1.4.2","4.0.3","4.0.3","4.0.3","2.3","0.3.0","2.4.3","0.9","1.1.1","0.5.2","1.5.4","1.6.3","1.4.2","0.1.4","1.7.2","1.36","0.4.2","1.3.0","0.2.2","2.0.4.1","1.0.0","1.0.1","1.8.0","2.0.1","4.0.3","0.12","0.1.8","0.5.0","1.0-4","1.6.4","2.0.3","4.10.0","1.2.0.1","0.3.4","2.5.1","1.0.7","2.0.2","1.3.1","2.0.1","0.4.12","2.11","1.0.3","0.13","1.0.2","0.4.0","1.1.1","1.7.1","4.0.3","1.7.5","1.4.0","3.1.5","1.1.4","1.1.1","1.3.1","4.0.3","0.2.0","1.2.2","4.0.3","0.3.8","0.4.0","0.5.3","2.4.2","0.28","1.3.2","1.8-4","2.2.1"]}]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","bookdown","broom","bslib","caret","cellranger","class","cli","codetools","colorspace","compiler","corrplot","crayon","crosstalk","data.table","datasets","DBI","dbplyr","digest","dplyr","e1071","ellipsis","EnvStats","evaluate","fansi","farver","fastmap","fmsb","forcats","foreach","fs","future","future.apply","generics","ggplot2","globals","glue","gower","graphics","grDevices","grid","gridExtra","gtable","haven","highr","hms","htmltools","htmlwidgets","httpuv","httr","ipred","iterators","jquerylib","jsonlite","knitr","labeling","later","lattice","lava","lazyeval","leaflet","leaflet.extras","lifecycle","listenv","lubridate","magrittr","MASS","Matrix","methods","mime","ModelMetrics","modelr","munsell","nlme","nnet","nortest","parallel","parallelly","pillar","pkgconfig","plotly","plyr","pROC","prodlim","promises","proxy","purrr","R6","Rcpp","readr","readxl","recipes","reprex","reshape2","rlang","rmarkdown","rmdformats","rpart","rpart.plot","rstudioapi","rvest","sass","scales","shiny","splines","stats","stats4","stringi","stringr","survival","tibble","tidyr","tidyselect","tidyverse","timeDate","tools","tzdb","utf8","utils","vctrs","viridisLite","visdat","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.3.0","4.0.3","0.24","0.7.10","0.3.1","6.0-90","1.1.0","7.3-19","3.1.0","0.2-16","2.0-2","4.0.3","0.90","1.4.2","1.2.0","1.14.2","4.0.3","1.1.1","2.1.1","0.6.28","1.0.7","1.7-9","0.3.2","2.4.0","0.14","0.5.0","2.1.0","1.1.0","0.7.1","0.5.1","1.5.1","1.5.0","1.23.0","1.8.1","0.1.1","3.3.5","0.14.0","1.4.2","0.2.2","4.0.3","4.0.3","4.0.3","2.3","0.3.0","2.4.3","0.9","1.1.1","0.5.2","1.5.4","1.6.3","1.4.2","0.9-12","1.0.13","0.1.4","1.7.2","1.36","0.4.2","1.3.0","0.20-41","1.6.10","0.2.2","2.0.4.1","1.0.0","1.0.1","0.8.0","1.8.0","2.0.1","7.3-53","1.2-18","4.0.3","0.12","1.2.2.2","0.1.8","0.5.0","3.1-149","7.3-14","1.0-4","4.0.3","1.28.1","1.6.4","2.0.3","4.10.0","1.8.6","1.18.0","2019.11.13","1.2.0.1","0.4-26","0.3.4","2.5.1","1.0.7","2.0.2","1.3.1","0.1.17","2.0.1","1.4.4","0.4.12","2.11","1.0.3","4.1-15","3.1.0","0.13","1.0.2","0.4.0","1.1.1","1.7.1","4.0.3","4.0.3","4.0.3","1.7.5","1.4.0","3.2-7","3.1.5","1.1.4","1.1.1","1.3.1","3043.102","4.0.3","0.2.0","1.2.2","4.0.3","0.3.8","0.4.0","0.5.3","2.4.2","0.28","1.3.2","1.8-4","2.2.1"]}]}]}
 </script>
 <!--/html_preserve-->
+</div>
+</div>
 </div>
 </div>
 

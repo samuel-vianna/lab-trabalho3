@@ -25,8 +25,8 @@ library(knitr)
 library(tidyverse)
 library(corrplot)
 library(fmsb)
-library(plotly)
 library(stringr)
+library(plotly)
 source('./00manipulando_dados.R')
 source("./01analise_descritiva.R")
 source("./01analise_functions.R")
@@ -46,9 +46,47 @@ child_descritiva <- knitr::knit_child('./relatorio/01descritiva.Rmd', quiet = TR
 cat(child_descritiva, sep = '\n')  
 ```
 
+# Remoção de valores faltantes e divisão dos dados
+
+A fim de obter um conjunto de dados mais fácil de trabalhar, foram eliminadas todas as variáveis com a porcentagem de valores faltantes acima de 40%, além de remover as observações com algum valor faltante. Com isso, a quantidade de observações foi de `r nrow(data)` para `r nrow(data_clean)`, e a quantide de observações de `r ncol(data)` para `r ncol(data_clean)`. 
+
+Além do mais, a fim de treinar os modelos, o banco foi dividio entre um subset de teste e outro de treino em uma proporção 70/30.
+
 # Testes
 
-```{r, results='asis', eval=F}
+## Seleção de variáveis
+
+Após selecionar as variáveis relacionadas com a situação do parto pelo método Boruta, temos as seguintes variáveis:
+
+```{r, eval=F}
+set.seed(555)
+boruta_var <- Boruta::Boruta(`Situação do parto` ~., data=treino)
+
+plot(boruta_var)
+```
+
+- Bezerro deste parto
+- ECC
+- Multiparidade
+- PS (mês)
+- IEP (mês)
+- Nº SC
+- PA (Kg/L/lactação)
+- DEL (dias)
+- PAT (kg/L/lactação)
+- PDMT (kg/L/dia)
+- DELA (dias)
+- ITU
+- Temp (ºC)
+- UR (%)
+
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("./plot_zoom.png")
+```
+
+Com base nisso, é possível realizar os próximos modelos com base em todas as variáveis e somente com as variáveis selecioandas pelo método do Boruta, a fim de verificar a diferença.
+
+```{r, results='asis', eval=T}
 child_testes <- knitr::knit_child('./relatorio/02testes.Rmd', quiet = TRUE)
 cat(child_testes, sep = '\n')  
 ```
